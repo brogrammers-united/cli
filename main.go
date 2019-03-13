@@ -9,13 +9,22 @@ import (
 	help "github.com/brogrammers-united/cli/help"
 )
 
+// For ease of extending the internal commands simply import and add to array
+//
+// this is to decouple the name and action form this package and is fully
+//  configured in the package for each subcommand the name will be pulled
+// from the struct and add to the map
+var builtInCommands = []commandLib.Command{help.HelpCommand}
+
 // Returns a map of all comfigured commands
 //
 // For now this funciton is hard coded with the build in commands
 // this can be exteded in later iterations to include custom execution
 func createCommandMap() (commands map[string]commandLib.Command) {
 	commands = make(map[string]commandLib.Command)
-	commands["help"] = help.GetCommand()
+	for _, command := range builtInCommands {
+		commands[command.Name] = command
+	}
 	return commands
 }
 
