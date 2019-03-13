@@ -9,9 +9,10 @@ import (
 	help "github.com/brogrammers-united/cli/help"
 )
 
-// Creates a map of commands access map by command name to receive
-// the struct satisfying the Command interface with the functionality
-// of the given command
+// Returns a map of all comfigured commands
+//
+// For now this funciton is hard coded with the build in commands
+// this can be exteded in later iterations to include custom execution
 func createCommandMap() (commands map[string]commandLib.Command) {
 	commands = make(map[string]commandLib.Command)
 	commands["help"] = help.GetCommand()
@@ -19,14 +20,18 @@ func createCommandMap() (commands map[string]commandLib.Command) {
 }
 
 func main() {
-	if len(os.Args) < 1 {
+	if len(os.Args) <= 1 {
 		fmt.Println("Sub command needs to be specified")
+		os.Exit(1)
 	}
 
 	commands := createCommandMap()
 	command := commands[strings.ToLower(os.Args[1])]
 
-	if command == nil {
+	// Since comparing stuct need something that can be compared
+	// The main part of the stuct that matters is the action if not
+	// nil then we may continue
+	if command.Action == nil {
 		fmt.Println("Command not found")
 		os.Exit(1)
 	}
@@ -37,6 +42,6 @@ func main() {
 	}
 
 	waiting := make(chan bool)
-	go command.Execute(waiting, args...)
+	go command.Action(waiting, args...)
 	<-waiting
 }
