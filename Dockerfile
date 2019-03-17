@@ -6,4 +6,4 @@ COPY . .
 RUN go get -d -v ./...
 RUN go install
 
-CMD ["go", "test"]
+CMD ["go", "test", "-v"]
