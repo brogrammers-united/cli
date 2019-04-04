@@ -29,6 +29,8 @@ func createCommandMap() (commands map[string]commandLib.Command) {
 }
 
 func main() {
+	GetAccessToken()
+
 	if len(os.Args) <= 1 {
 		fmt.Println("Sub command needs to be specified")
 		os.Exit(1)
